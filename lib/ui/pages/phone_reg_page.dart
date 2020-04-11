@@ -1,8 +1,7 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:green_taxi/pages/otp_page.dart';
 import 'package:green_taxi/ui/widgets/header_widget.dart';
-import 'package:green_taxi/utils/constants.dart';
+import 'otp_page.dart';
 
 class PhoneRegPage extends StatefulWidget {
   static final routeName = "phone-page";

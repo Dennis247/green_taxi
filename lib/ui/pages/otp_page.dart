@@ -1,7 +1,5 @@
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:green_taxi/pages/book_taxi_page.dart';
-import 'package:green_taxi/pages/phone_reg_page.dart';
 import 'package:green_taxi/ui/widgets/header_widget.dart';
 import 'package:green_taxi/utils/styles.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';

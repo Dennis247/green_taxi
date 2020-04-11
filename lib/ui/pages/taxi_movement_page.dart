@@ -5,14 +5,8 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:green_taxi/model/card_model.dart';
+
 import 'package:green_taxi/model/place_model.dart';
-import 'package:green_taxi/model/ride_option_model.dart';
-import 'package:green_taxi/pages/taxi_movement_page.dart';
-import 'package:green_taxi/utils/constants.dart';
-import 'package:green_taxi/utils/styles.dart';
-import 'package:place_picker/uuid.dart';
-import 'package:green_taxi/provider/google_map_service.dart';
 
 class TaxiMovementPage extends StatefulWidget {
   static String routeName = "taxi-movement-page";

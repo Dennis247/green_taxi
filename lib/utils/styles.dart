@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:green_taxi/utils/constants.dart';
 
 class CustomStyles {
   static final smallTextStyle = GoogleFonts.poppins(
@@ -8,6 +9,15 @@ class CustomStyles {
       color: Color(0xff303030),
       fontSize: 12,
       fontWeight: FontWeight.w700,
+    ),
+  );
+
+  static final smallLightTextStyle = GoogleFonts.poppins(
+    textStyle: TextStyle(
+      color: Colors.grey,
+      fontSize: 10,
+      fontFamily: 'Poppins',
+      fontWeight: FontWeight.w300,
     ),
   );
 
@@ -39,6 +49,22 @@ class CustomStyles {
     textStyle: TextStyle(
       color: Colors.black,
       fontSize: 14,
+      fontWeight: FontWeight.w700,
+    ),
+  );
+
+  static final cardBoldDarkTextStyle2 = GoogleFonts.poppins(
+    textStyle: TextStyle(
+      color: Colors.black,
+      fontSize: 12,
+      fontWeight: FontWeight.w700,
+    ),
+  );
+
+  static final cardBoldDarkTextStyleGreen = GoogleFonts.poppins(
+    textStyle: TextStyle(
+      color: Constatnts.primaryColor,
+      fontSize: 12,
       fontWeight: FontWeight.w700,
     ),
   );

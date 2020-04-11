@@ -10,10 +10,12 @@ import 'package:green_taxi/model/card_model.dart';
 import 'package:green_taxi/model/place_model.dart';
 import 'package:green_taxi/model/ride_option_model.dart';
 import 'package:green_taxi/pages/taxi_movement_page.dart';
+import 'package:green_taxi/ui/widgets/drawer_widget.dart';
 import 'package:green_taxi/utils/constants.dart';
 import 'package:green_taxi/utils/styles.dart';
-import 'package:place_picker/uuid.dart';
+
 import 'package:green_taxi/provider/google_map_service.dart';
+import 'package:uuid/uuid.dart';
 
 class BookTaxiPage extends StatefulWidget {
   static final routeName = "book-taxi-page";
@@ -215,7 +217,7 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: Drawer(),
+      drawer: DrawerWidget(),
       body: Stack(
         children: <Widget>[
           Container(
@@ -327,7 +329,7 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
                   ),
                   suggestionsCallback: (pattern) async {
                     if (sessionToken == null) {
-                      sessionToken = uuid.generateV4();
+                      sessionToken = uuid.v4();
                     }
                     googleMapServices =
                         GoogleMapServices(sessionToken: sessionToken);
@@ -377,7 +379,7 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
                   ),
                   suggestionsCallback: (pattern) async {
                     if (sessionToken == null) {
-                      sessionToken = uuid.generateV4();
+                      sessionToken = uuid.v4();
                     }
                     googleMapServices =
                         GoogleMapServices(sessionToken: sessionToken);
