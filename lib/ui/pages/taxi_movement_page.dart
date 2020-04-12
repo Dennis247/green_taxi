@@ -5,6 +5,9 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:green_taxi/ui/pages/rate_driver_page.dart';
+import 'package:green_taxi/utils/constants.dart';
+import 'package:green_taxi/utils/styles.dart';
 
 import 'package:green_taxi/model/place_model.dart';
 
@@ -14,13 +17,15 @@ class TaxiMovementPage extends StatefulWidget {
   final PlaceDetail toPlaceDetail;
   final Set<Polyline> polylines;
   final List<LatLng> polylineCoordinates;
+  final LatLngBounds bound;
 
   const TaxiMovementPage(
       {Key key,
       this.fromPlaceDetail,
       this.toPlaceDetail,
       this.polylines,
-      this.polylineCoordinates})
+      this.polylineCoordinates,
+      this.bound})
       : super(key: key);
   @override
   _TaxiMovementPageState createState() => _TaxiMovementPageState();
@@ -32,29 +37,36 @@ class _TaxiMovementPageState extends State<TaxiMovementPage> {
   bool isMapCreated = false;
   final Key _mapKey = UniqueKey();
   Timer _demoTimer;
-
   Set<Marker> _markers = {};
   LatLng _initialCameraPosition;
   String _mapStyle;
   BitmapDescriptor _mylocation;
   BitmapDescriptor _taxilocation;
+  bool _hasTripEnded = false;
+
+  @override
+  void dispose() {
+    _demoTimer.cancel();
+    super.dispose();
+  }
 
   @override
   void initState() {
-    BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(devicePixelRatio: 2.5), 'assets/images/taxi.png')
+    BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5),
+            'assets/images/mylocation.png')
         .then((onValue) {
       _taxilocation = onValue;
     });
 
     BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5),
-            'assets/images/mylocation.png')
+            'assets/images/mydestination.png')
         .then((onValue) {
       _mylocation = onValue;
     });
 
     _initialCameraPosition =
         LatLng(widget.toPlaceDetail.lat, widget.toPlaceDetail.lng);
+
     rootBundle.loadString('assets/images/map_style.txt').then((string) {
       _mapStyle = string;
     });
@@ -86,9 +98,11 @@ class _TaxiMovementPageState extends State<TaxiMovementPage> {
           markerId: MarkerId('pickup'),
           position: newTaxiPosition, // updated position
           icon: _taxilocation));
-      if (index == widget.polylineCoordinates.length) {
+      if (index == widget.polylineCoordinates.length - 1) {
+        _hasTripEnded = true;
         _demoTimer.cancel();
         //journey has ended
+
       } else {
         index++;
       }
@@ -110,7 +124,7 @@ class _TaxiMovementPageState extends State<TaxiMovementPage> {
                 zoomGesturesEnabled: true,
                 // myLocationEnabled: true,
                 markers: _markers,
-                polylines: widget.polylines,
+                //  polylines: widget.polylines,
                 initialCameraPosition:
                     CameraPosition(target: _initialCameraPosition, zoom: 13),
                 onMapCreated: (GoogleMapController controller) {
@@ -137,13 +151,73 @@ class _TaxiMovementPageState extends State<TaxiMovementPage> {
                         ),
                         onTap: () {}));
                   });
+
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    CameraUpdate u2 =
+                        CameraUpdate.newLatLngBounds(widget.bound, 50);
+                    controller.animateCamera(u2).then((void v) {
+                      //  check(u2, controller);
+                    });
+                  });
                 },
               )),
+          Positioned(
+            top: 50.0,
+            left: 10.0,
+            right: 10.0,
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    MaterialButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      color: !_hasTripEnded ? Colors.red : Colors.green,
+                      textColor: Colors.white,
+                      child: Icon(
+                        !_hasTripEnded
+                            ? FontAwesomeIcons.car
+                            : Icons.arrow_back,
+                        size: 15,
+                      ),
+                      padding: EdgeInsets.all(6),
+                      shape: CircleBorder(),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          !_hasTripEnded
+                              ? "taxi will arrive"
+                              : "taxi at destination",
+                          style: CustomStyles.smallLightTextStyle,
+                        ),
+                        Text(
+                          !_hasTripEnded
+                              ? "Your Destination in 5 minutes"
+                              : "Your trip has ended",
+                          style: CustomStyles.normalTextStyle,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: !_hasTripEnded ? Constatnts.primaryColor : Colors.red,
         onPressed: () {
-          updatePolyLinePoints();
+          !_hasTripEnded
+              ? updatePolyLinePoints()
+              : Navigator.of(context)
+                  .pushReplacementNamed(RateDriverPage.routeName);
         },
         child: Icon(FontAwesomeIcons.taxi),
       ),

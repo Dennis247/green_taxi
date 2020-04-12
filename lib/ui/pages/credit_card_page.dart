@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_widget.dart';
-import 'package:green_taxi/pages/add_credit_card_page.dart';
 import 'package:green_taxi/ui/widgets/header_widget.dart';
 import 'package:green_taxi/utils/constants.dart';
 import 'package:green_taxi/utils/styles.dart';
+
+import 'add_credit_card_page.dart';
 
 class CreditCardPage extends StatelessWidget {
   static final routeName = "credit-card";

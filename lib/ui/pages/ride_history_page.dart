@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:green_taxi/ui/widgets/header_widget.dart';
 import 'package:green_taxi/ui/widgets/ride_history_widget.dart';
-import 'package:green_taxi/utils/constants.dart';
 import 'package:green_taxi/utils/styles.dart';
 
 class RideHistoryPage extends StatelessWidget {
   static final String routeName = "ride-history-page";
+
   @override
   Widget build(BuildContext context) {
     final mQ = MediaQuery.of(context).size;
@@ -20,7 +19,7 @@ class RideHistoryPage extends StatelessWidget {
           ),
           NoLogoHeaderWidget(height: mQ.height * 0.5),
           Positioned(
-              top: mQ.height * 0.2,
+              top: mQ.height * 0.18,
               left: 5,
               right: 5,
               child: Container(

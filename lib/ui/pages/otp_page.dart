@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:green_taxi/pages/book_taxi_page.dart';
 import 'package:green_taxi/ui/widgets/header_widget.dart';
 import 'package:green_taxi/utils/styles.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+
+import 'book_taxi_page.dart';
 
 class OtpPage extends StatefulWidget {
   static final routeName = "otp-page";
@@ -26,7 +27,7 @@ class _OtpPageState extends State<OtpPage> {
                 left: 0.0,
                 child: MaterialButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(BookTaxiPage.routeName);
+                    Navigator.of(context).pop();
                   },
                   color: Colors.white,
                   textColor: Colors.green,
@@ -86,7 +87,7 @@ class _OtpPageState extends State<OtpPage> {
                           borderRadius: BorderRadius.circular(5),
                           fieldHeight: 30,
                           fieldWidth: 25,
-                          autoFocus: true,
+                          // autoFocus: true,
                           onChanged: (value) {
                             setState(() {
                               // currentText = value;
@@ -98,7 +99,7 @@ class _OtpPageState extends State<OtpPage> {
                         child: MaterialButton(
                           onPressed: () {
                             Navigator.of(context)
-                                .pushNamed(BookTaxiPage.routeName);
+                                .pushReplacementNamed(BookTaxiPage.routeName);
                           },
                           color: Colors.green,
                           textColor: Colors.white,

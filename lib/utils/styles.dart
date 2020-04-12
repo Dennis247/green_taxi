@@ -17,7 +17,6 @@ class CustomStyles {
       color: Colors.grey,
       fontSize: 10,
       fontFamily: 'Poppins',
-      fontWeight: FontWeight.w300,
     ),
   );
 
@@ -49,6 +48,14 @@ class CustomStyles {
     textStyle: TextStyle(
       color: Colors.black,
       fontSize: 14,
+      fontWeight: FontWeight.w700,
+    ),
+  );
+
+  static final cardBoldDarkDrawerTextStyle = GoogleFonts.poppins(
+    textStyle: TextStyle(
+      color: Colors.black,
+      fontSize: 16,
       fontWeight: FontWeight.w700,
     ),
   );

@@ -9,13 +9,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:green_taxi/model/card_model.dart';
 import 'package:green_taxi/model/place_model.dart';
 import 'package:green_taxi/model/ride_option_model.dart';
-import 'package:green_taxi/pages/taxi_movement_page.dart';
 import 'package:green_taxi/ui/widgets/drawer_widget.dart';
 import 'package:green_taxi/utils/constants.dart';
 import 'package:green_taxi/utils/styles.dart';
 
 import 'package:green_taxi/provider/google_map_service.dart';
 import 'package:uuid/uuid.dart';
+
+import 'taxi_movement_page.dart';
 
 class BookTaxiPage extends StatefulWidget {
   static final routeName = "book-taxi-page";
@@ -30,6 +31,7 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
   String _mapStyle;
   BitmapDescriptor _taxilocation;
   BitmapDescriptor _mylocation;
+  BitmapDescriptor _mydestination;
   Completer<GoogleMapController> _controller = Completer();
   bool isMapCreated = false;
   final Key _mapKey = UniqueKey();
@@ -46,6 +48,7 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
   bool _hasGottenCordinates = false;
+  LatLngBounds bound;
 
   List<UserCardModel> _cards = [
     UserCardModel(
@@ -106,10 +109,16 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
       _mylocation = onValue;
     });
 
-    super.initState();
+    BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5),
+            'assets/images/mydestination.png')
+        .then((onValue) {
+      _mydestination = onValue;
+    });
+
     rootBundle.loadString('assets/images/map_style.txt').then((string) {
       _mapStyle = string;
     });
+    super.initState();
 
     _selectedalvalue = _cards[0];
 
@@ -150,8 +159,6 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
       });
     }
     setState(() {
-      // create a Polyline instance
-
       Polyline polyline = Polyline(
           polylineId: PolylineId('poly'),
           color: Colors.black,
@@ -170,10 +177,16 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
       });
     }
     if (_toLocationController.text != null && _toPlaceDetail != null) {
+      getLatLngBounds(LatLng(_fromplaceDetail.lat, _fromplaceDetail.lng),
+          LatLng(_toPlaceDetail.lat, _toPlaceDetail.lng));
       GoogleMapController controller = await _controller.future;
-      controller.animateCamera(CameraUpdate.newLatLng(
-        LatLng(_toPlaceDetail.lat, _toPlaceDetail.lng),
-      ));
+      CameraUpdate u2 = CameraUpdate.newLatLngBounds(bound, 50);
+      controller.animateCamera(u2).then((void v) {
+        check(u2, controller);
+      });
+      // controller.animateCamera(CameraUpdate.newLatLng(
+      //   LatLng(_toPlaceDetail.lat, _toPlaceDetail.lng),
+      // ));
     }
 
     setState(() {
@@ -196,6 +209,7 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
           Marker(
             markerId: MarkerId(_toPlaceDetail.placeId),
             position: LatLng(_toPlaceDetail.lat, _toPlaceDetail.lng),
+            icon: _mydestination,
             infoWindow: InfoWindow(
               title: "destination",
               snippet: _toPlaceDetail.formattedAddress,
@@ -213,6 +227,42 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
     }
   }
 
+  void getLatLngBounds(LatLng from, LatLng to) {
+    if (from.latitude > to.latitude && from.longitude > to.longitude) {
+      bound = LatLngBounds(southwest: to, northeast: from);
+    } else if (from.longitude > to.longitude) {
+      bound = LatLngBounds(
+          southwest: LatLng(from.latitude, to.longitude),
+          northeast: LatLng(to.latitude, from.longitude));
+    } else if (from.latitude > to.latitude) {
+      bound = LatLngBounds(
+          southwest: LatLng(to.latitude, from.longitude),
+          northeast: LatLng(from.latitude, to.longitude));
+    } else {
+      bound = LatLngBounds(southwest: from, northeast: to);
+    }
+  }
+
+  void check(CameraUpdate u, GoogleMapController c) async {
+    c.animateCamera(u);
+    LatLngBounds l1 = await c.getVisibleRegion();
+    LatLngBounds l2 = await c.getVisibleRegion();
+    print(l1.toString());
+    print(l2.toString());
+    if (l1.southwest.latitude == -90 || l2.southwest.latitude == -90)
+      check(u, c);
+  }
+
+  void _clearCordinate() {
+    setState(() {
+      _fromLocationController.clear();
+      _toLocationController.clear();
+      _hasGottenCordinates = false;
+      _polylines = {};
+      _markers.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,7 +271,13 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
       body: Stack(
         children: <Widget>[
           Container(
-              height: MediaQuery.of(context).size.height, //- 230.0,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.white,
+          ),
+          Container(
+              margin: const EdgeInsets.only(top: 20),
+              height: MediaQuery.of(context).size.height * 0.6,
               child: myLocation == null
                   ? Center(
                       child: Text("Loading Map"),
@@ -229,9 +285,7 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
                   : GoogleMap(
                       key: _mapKey,
                       mapType: MapType.normal,
-
                       zoomGesturesEnabled: true,
-                      // myLocationEnabled: true,
                       markers: _markers,
                       polylines: _polylines,
                       initialCameraPosition:
@@ -239,31 +293,6 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
                       onMapCreated: (GoogleMapController controller) {
                         controller.setMapStyle(_mapStyle);
                         _controller.complete(controller);
-                        // setState(() {
-                        //   _markers.add(
-                        //     Marker(
-                        //         markerId: MarkerId("1"),
-                        //         position: LatLng(6.465422, 3.406448),
-                        //         icon: _taxilocation,
-                        //         onTap: () {}),
-                        //   );
-
-                        //   _markers.add(
-                        //     Marker(
-                        //         markerId: MarkerId("2"),
-                        //         position: LatLng(6.30, 3.2145634),
-                        //         icon: _taxilocation,
-                        //         onTap: () {}),
-                        //   );
-
-                        //   _markers.add(
-                        //     Marker(
-                        //         markerId: MarkerId("3"),
-                        //         position: LatLng(6.35, 3.2139453),
-                        //         icon: _taxilocation,
-                        //         onTap: () {}),
-                        //   );
-                        // });
                       },
                     )),
           Positioned(top: 65, left: 5, right: 5, child: _buildHelloWidget()),
@@ -284,6 +313,22 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
                     _scaffoldKey.currentState.openDrawer();
                   }),
             ),
+          ),
+          Positioned(
+            top: 25.0,
+            right: 5.0,
+            child: _hasGottenCordinates
+                ? GestureDetector(
+                    onTap: () {
+                      _clearCordinate();
+                    },
+                    child: Icon(
+                      Icons.cancel,
+                      color: Colors.green,
+                      size: 40,
+                    ),
+                  )
+                : Text(""),
           )
         ],
       ),
@@ -309,7 +354,7 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
                   debounceDuration: Duration(milliseconds: 500),
                   textFieldConfiguration: TextFieldConfiguration(
                     controller: _fromLocationController,
-                    autofocus: true,
+                    //  autofocus: true,
                     style: TextStyle(fontSize: 12),
                     decoration: InputDecoration(
                         icon: new Icon(
@@ -350,7 +395,7 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
                       sessionToken,
                     );
 
-                    _moveCamera(_fromPlaceDetail, _toPlaceDetail);
+                    //    _moveCamera(_fromPlaceDetail, _toPlaceDetail);
                     sessionToken = null;
                   },
                 ),
@@ -359,7 +404,7 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
                   debounceDuration: Duration(milliseconds: 500),
                   textFieldConfiguration: TextFieldConfiguration(
                     controller: _toLocationController,
-                    autofocus: true,
+                    //autofocus: true,
                     style: TextStyle(fontSize: 12),
                     decoration: InputDecoration(
                         icon: new Icon(
@@ -404,34 +449,8 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
                   },
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 45,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    MaterialButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(new MaterialPageRoute(builder: (context) {
-                          return TaxiMovementPage(
-                            fromPlaceDetail: _fromPlaceDetail,
-                            toPlaceDetail: _toPlaceDetail,
-                            polylines: _polylines,
-                            polylineCoordinates: polylineCoordinates,
-                          );
-                        }));
-                      },
-                      color: Colors.green,
-                      textColor: Colors.white,
-                      child: Icon(
-                        Icons.arrow_forward,
-                        size: 15,
-                      ),
-                      padding: EdgeInsets.all(6),
-                      shape: CircleBorder(),
-                    )
-                  ],
-                )
               ],
             ),
           ),
@@ -439,26 +458,28 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
   }
 
   Widget _buildHelloWidget() {
-    return Card(
-      child: Container(
-        color: Colors.white,
-        child: ListTile(
-          leading: Icon(
-            FontAwesomeIcons.user,
-            color: Constatnts.primaryColor,
-            size: 40,
-          ),
-          title: Text(
-            "Hello Dennis",
-            style: CustomStyles.smallTextStyle,
-          ),
-          subtitle: Text(
-            "Where are you Going to ?",
-            style: CustomStyles.normalTextStyle,
-          ),
-        ),
-      ),
-    );
+    return _hasGottenCordinates
+        ? Text("")
+        : Card(
+            child: Container(
+              color: Colors.white,
+              child: ListTile(
+                leading: Icon(
+                  FontAwesomeIcons.user,
+                  color: Constatnts.primaryColor,
+                  size: 40,
+                ),
+                title: Text(
+                  "Hello Dennis",
+                  style: CustomStyles.smallTextStyle,
+                ),
+                subtitle: Text(
+                  "Where are you Going to ?",
+                  style: CustomStyles.normalTextStyle,
+                ),
+              ),
+            ),
+          );
   }
 
   Widget _buildSelectRideWidget() {

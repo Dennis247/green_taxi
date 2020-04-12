@@ -27,12 +27,7 @@ class SettingsPage extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       title,
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 10,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w300,
-                      ),
+                      style: CustomStyles.smallLightTextStyle,
                     ),
                     Text(subtitle, style: CustomStyles.smallTextStyle)
                   ],
@@ -47,7 +42,7 @@ class SettingsPage extends StatelessWidget {
           width: 75,
           decoration: BoxDecoration(
             border: Border.all(
-              color: Color(0xffd6d6d6),
+              color: Colors.grey,
               width: 1,
             ),
             borderRadius: BorderRadius.circular(12),
@@ -56,7 +51,7 @@ class SettingsPage extends StatelessWidget {
             child: Text(
               'Change',
               style: TextStyle(
-                color: Color(0xffd6d6d6),
+                color: Colors.grey,
                 fontSize: 12,
                 fontFamily: 'Poppins',
               ),
@@ -188,15 +183,8 @@ class SettingsPage extends StatelessWidget {
                     color: Colors.grey,
                     size: 20,
                   ),
-                  Text(
-                    "Add New Plaace",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 10,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
+                  Text("Add New Plaace",
+                      style: CustomStyles.smallLightTextStyle),
                 ],
               ))
         ],

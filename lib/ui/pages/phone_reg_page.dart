@@ -87,7 +87,8 @@ class _PhoneRegPageState extends State<PhoneRegPage> {
                           ),
                         ),
                         onSubmitted: (e) {
-                          Navigator.of(context).pushNamed(OtpPage.routeName);
+                          Navigator.of(context)
+                              .pushReplacementNamed(OtpPage.routeName);
                         },
                       )),
                 ],

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:green_taxi/pages/credit_card_page.dart';
-import 'package:green_taxi/pages/promo_code_page.dart';
-import 'package:green_taxi/pages/rate_driver_page.dart';
-import 'package:green_taxi/pages/support_page.dart';
+import 'package:green_taxi/ui/pages/credit_card_page.dart';
+import 'package:green_taxi/ui/pages/promo_code_page.dart';
+
+import 'package:green_taxi/ui/pages/rate_driver_page.dart';
+import 'package:green_taxi/ui/pages/ride_details_page.dart';
+import 'package:green_taxi/ui/pages/ride_history_page.dart';
+import 'package:green_taxi/ui/pages/settings_page.dart';
+import 'package:green_taxi/ui/pages/support_page.dart';
 import 'package:green_taxi/utils/constants.dart';
 import 'package:green_taxi/utils/styles.dart';
-import 'package:green_taxi/pages/ride_history_page.dart';
-import 'package:green_taxi/pages/settings_page.dart';
+
 import 'package:share/share.dart';
 
 class DrawerWidget extends StatelessWidget {
@@ -24,11 +27,11 @@ class DrawerWidget extends StatelessWidget {
             ),
             title: Text(
               "Good Morning",
-              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
             ),
             subtitle: Text(
               "Osagiede Dennis",
-              style: CustomStyles.cardBoldDarkTextStyle,
+              style: CustomStyles.cardBoldDarkDrawerTextStyle,
             ),
           ),
           Divider(),
@@ -40,27 +43,16 @@ class DrawerWidget extends StatelessWidget {
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushNamed(RateDriverPage.routeName);
-                  },
-                  child: Text(
-                    "Rate Your Driver",
-                    style: CustomStyles.cardBoldDarkTextStyle,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushNamed(RideHistoryPage.routeName);
+                    Navigator.of(context)
+                        .popAndPushNamed(RideHistoryPage.routeName);
                   },
                   child: Text(
                     "Ride History",
-                    style: CustomStyles.cardBoldDarkTextStyle,
+                    style: CustomStyles.cardBoldDarkDrawerTextStyle,
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -71,62 +63,68 @@ class DrawerWidget extends StatelessWidget {
                   },
                   child: Text(
                     "Invite Friends",
-                    style: CustomStyles.cardBoldDarkTextStyle,
+                    style: CustomStyles.cardBoldDarkDrawerTextStyle,
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushNamed(PromoCodePage.routeName);
+                    Navigator.of(context)
+                        .popAndPushNamed(PromoCodePage.routeName);
                   },
                   child: Text(
                     "Promo Codes",
-                    style: CustomStyles.cardBoldDarkTextStyle,
+                    style: CustomStyles.cardBoldDarkDrawerTextStyle,
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushNamed(CreditCardPage.routeName);
+                    Navigator.of(context)
+                        .popAndPushNamed(CreditCardPage.routeName);
                   },
                   child: Text(
                     "Credit Card",
-                    style: CustomStyles.cardBoldDarkTextStyle,
+                    style: CustomStyles.cardBoldDarkDrawerTextStyle,
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushNamed(SettingsPage.routeName);
+                    Navigator.of(context)
+                        .popAndPushNamed(SettingsPage.routeName);
                   },
                   child: Text(
                     "Settings",
-                    style: CustomStyles.cardBoldDarkTextStyle,
+                    style: CustomStyles.cardBoldDarkDrawerTextStyle,
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushNamed(SupportPage.routeName);
+                    Navigator.of(context)
+                        .popAndPushNamed(SupportPage.routeName);
                   },
                   child: Text(
                     "Support",
-                    style: CustomStyles.cardBoldDarkTextStyle,
+                    style: CustomStyles.cardBoldDarkDrawerTextStyle,
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/');
+                  },
                   child: Text(
                     "Log Out",
                     style: CustomStyles.cardBoldDarkTextStyle,

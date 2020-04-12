@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:green_taxi/ui/pages/book_taxi_page.dart';
 import 'package:green_taxi/ui/widgets/header_widget.dart';
 import 'package:green_taxi/utils/constants.dart';
 import 'package:green_taxi/utils/styles.dart';
@@ -164,7 +165,10 @@ class _RateDriverPageState extends State<RateDriverPage> {
                     style: CustomStyles.cardBoldDarkTextStyleGreen,
                   ),
                   MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(BookTaxiPage.routeName);
+                    },
                     color: Colors.green,
                     textColor: Colors.white,
                     child: Icon(
