@@ -276,7 +276,7 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
             color: Colors.white,
           ),
           Container(
-              margin: const EdgeInsets.only(top: 20),
+              margin: const EdgeInsets.only(top: 5),
               height: MediaQuery.of(context).size.height * 0.6,
               child: myLocation == null
                   ? Center(
@@ -354,7 +354,7 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
                   debounceDuration: Duration(milliseconds: 500),
                   textFieldConfiguration: TextFieldConfiguration(
                     controller: _fromLocationController,
-                    //  autofocus: true,
+                    autofocus: true,
                     style: TextStyle(fontSize: 12),
                     decoration: InputDecoration(
                         icon: new Icon(
@@ -404,7 +404,7 @@ class _BookTaxiPageState extends State<BookTaxiPage> {
                   debounceDuration: Duration(milliseconds: 500),
                   textFieldConfiguration: TextFieldConfiguration(
                     controller: _toLocationController,
-                    //autofocus: true,
+                    autofocus: true,
                     style: TextStyle(fontSize: 12),
                     decoration: InputDecoration(
                         icon: new Icon(

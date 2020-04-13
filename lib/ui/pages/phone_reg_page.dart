@@ -77,6 +77,7 @@ class _PhoneRegPageState extends State<PhoneRegPage> {
                   Expanded(
                       flex: 2,
                       child: TextField(
+                        autofocus: true,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Enter your mobile number",
@@ -90,6 +91,7 @@ class _PhoneRegPageState extends State<PhoneRegPage> {
                           Navigator.of(context)
                               .pushReplacementNamed(OtpPage.routeName);
                         },
+                        keyboardType: TextInputType.number,
                       )),
                 ],
               ),

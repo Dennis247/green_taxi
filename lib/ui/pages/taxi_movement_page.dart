@@ -5,6 +5,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:green_taxi/ui/pages/book_taxi_page.dart';
 import 'package:green_taxi/ui/pages/rate_driver_page.dart';
 import 'package:green_taxi/utils/constants.dart';
 import 'package:green_taxi/utils/styles.dart';
@@ -173,14 +174,15 @@ class _TaxiMovementPageState extends State<TaxiMovementPage> {
                   children: <Widget>[
                     MaterialButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        _hasTripEnded
+                            ? Navigator.of(context)
+                                .pushReplacementNamed(RateDriverPage.routeName)
+                            : Navigator.of(context).pop();
                       },
-                      color: !_hasTripEnded ? Colors.red : Colors.green,
+                      color: _hasTripEnded ? Colors.red : Colors.green,
                       textColor: Colors.white,
                       child: Icon(
-                        !_hasTripEnded
-                            ? FontAwesomeIcons.car
-                            : Icons.arrow_back,
+                        _hasTripEnded ? FontAwesomeIcons.car : Icons.arrow_back,
                         size: 15,
                       ),
                       padding: EdgeInsets.all(6),

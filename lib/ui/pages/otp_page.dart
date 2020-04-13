@@ -87,7 +87,7 @@ class _OtpPageState extends State<OtpPage> {
                           borderRadius: BorderRadius.circular(5),
                           fieldHeight: 30,
                           fieldWidth: 25,
-                          // autoFocus: true,
+                          autoFocus: true,
                           onChanged: (value) {
                             setState(() {
                               // currentText = value;
