@@ -88,8 +88,7 @@ class _PhoneRegPageState extends State<PhoneRegPage> {
                           ),
                         ),
                         onSubmitted: (e) {
-                          Navigator.of(context)
-                              .pushReplacementNamed(OtpPage.routeName);
+                          Navigator.of(context).pushNamed(OtpPage.routeName);
                         },
                         keyboardType: TextInputType.number,
                       )),
